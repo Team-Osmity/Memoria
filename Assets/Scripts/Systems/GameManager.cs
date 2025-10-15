@@ -1,16 +1,29 @@
 using UnityEngine;
+using Memoria.Constants;
+using UnityEngine.Networking;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        
+        StartCoroutine(FetchJson());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator FetchJson()
     {
-        
+        using (UnityWebRequest request = UnityWebRequest.Get(SpreadSheets.ApiUrl))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Response:\n" + request.downloadHandler.text);
+            }
+            else
+            {
+                Debug.LogError("Error: " + request.error);
+            }
+        }
     }
 }
