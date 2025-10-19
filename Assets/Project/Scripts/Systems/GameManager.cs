@@ -13,7 +13,6 @@ namespace Memoria.Systems
         {
             if (Instance != null) { Destroy(gameObject); return; }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
             SceneDirector = GetComponentInChildren<SceneDirector>();
         }
     }
