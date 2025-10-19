@@ -1,32 +1,21 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Memoria.Constants;
-using UnityEngine.Networking;
-using System.Collections;
+using Memoria.Systems.SceneFlow;
 
 namespace Memoria.Systems
 {
     public class GameManager : MonoBehaviour
     {
-        private void Start()
-        {
-            StartCoroutine(FetchJson());
-        }
+        public static GameManager Instance { get; private set; }
+        public SceneDirector SceneDirector { get; private set; }
 
-        private IEnumerator FetchJson()
+        void Awake()
         {
-            using (UnityWebRequest request = UnityWebRequest.Get(GoogleSheets.API_URL))
-            {
-                yield return request.SendWebRequest();
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    Debug.Log("Response:\n" + request.downloadHandler.text);
-                }
-                else
-                {
-                    Debug.LogError("Error: " + request.error);
-                }
-            }
+            if (Instance != null) { Destroy(gameObject); return; }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            SceneDirector = GetComponentInChildren<SceneDirector>();
         }
     }
 }
