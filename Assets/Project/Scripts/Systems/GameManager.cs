@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Memoria.Constants;
-using Memoria.Systems.SceneFlow;
 
 namespace Memoria.Systems
 {
