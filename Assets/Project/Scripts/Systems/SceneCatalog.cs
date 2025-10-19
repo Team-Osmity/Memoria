@@ -1,36 +1,38 @@
 using System;
-using System.Collection.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Memoria.Constants;
 
 namespace Memoria.Systems
 {
+    [CreateAssetMenu(menuName = "Memoria/SceneCatalog")]
     public class SceneCatalog : ScriptableObject
     {
         [SerializeField] public struct ContentEntry
         {
-            public ContentScene key;
+            public Scenes.ContentScene key;
             public string sceneName;
         }
         [SerializeField] public struct OverlayEntry
         {
-            public OverlayScene key;
+            public Scenes.OverlayScene key;
             public string sceneName;
         }
 
         public List<ContentEntry> contents = new List<ContentEntry>();
         public List<OverlayEntry> overlays = new List<OverlayEntry>();
 
-        Dictionary<ContentScene,string> _cMap;
-        Dictionary<OverlayScene,string> _oMap;
+        Dictionary<Scenes.ContentScene,string> _cMap;
+        Dictionary<Scenes.OverlayScene,string> _oMap;
 
-        public string Resolve(ContentScene k)
+        public string Resolve(Scenes.ContentScene k)
         {
             _cMap ??= contents.Where(e=>!string.IsNullOrEmpty(e.sceneName))
                               .ToDictionary(e=>e.key, e=>e.sceneName);
             return _cMap.TryGetValue(k, out var v) ? v : null;
         }
-        public string Resolve(OverlayScene k)
+        public string Resolve(Scenes.OverlayScene k)
         {
             _oMap ??= overlays.Where(e=>!string.IsNullOrEmpty(e.sceneName))
                               .ToDictionary(e=>e.key, e=>e.sceneName);
