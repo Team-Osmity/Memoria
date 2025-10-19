@@ -18,6 +18,8 @@ namespace Memoria.Systems
 
         readonly Stack<string> overlayStack = new Stack<string>();
 
+        public string CurrentContentName { get; private set; }
+
         void Awake()
         {
             if (Instance && Instance != this) { Destroy(gameObject); return; }
@@ -34,9 +36,27 @@ namespace Memoria.Systems
             {
                 await ShowLoadingAsync();
                 await PopOverlaysAsync();
+
+                if (!string.IsNullOrEmpty(CurrentContentName))
+                {
+                    var u = SceneManager.UnloadSceneAsync(CurrentContentName);
+                    while (!u.isDone)
+                        await Task.Yield();
+                }
+
+                var l = SceneManager.LoadSceneAsync(nextName, LoadSceneMode.Additive);
+                while (!l.isDone)
+                    await Task.Yield();
+
+                var sc = SceneManager.GetSceneByName(nextName);
+                SceneManager.SetActiveScene(sc);
+                CurrentContentName = nextName;
+                if (verboseLog)
+                    Debug.Log($"[SceneDirector] Switched to content scene: {nextName}");
             }
             finally
             {
+                await HideLoadingAsync();
                 isBusy = false;
             }
         }
