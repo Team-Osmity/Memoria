@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+namespace Memoria.Entity
 {
-    private Player player;
-
-    public void Initialize(Player player)
+    public class PlayerController : MonoBehaviour
     {
-        this.player = player;
-    }
+       private Player player;
 
-    private void Update()
-    {
-        
+       public void Initialize(Player player)
+       {
+           this.player = player;
+       }
+
+       private void Update()
+       {
+
+       }
     }
 }
