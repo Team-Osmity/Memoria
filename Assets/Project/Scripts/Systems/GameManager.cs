@@ -1,32 +1,41 @@
 using UnityEngine;
+using System.Threading.Tasks;
 using Memoria.Constants;
-using UnityEngine.Networking;
-using System.Collections;
 
 namespace Memoria.Systems
 {
     public class GameManager : MonoBehaviour
     {
-        private void Start()
+        public static GameManager Instance { get; private set; }
+        public SceneDirector SceneDirector { get; private set; }
+
+        [SerializeField] private Scenes.ContentScene first = Scenes.ContentScene.Title;
+        [SerializeField] private bool showCreditsOnBoot = false;
+        [SerializeField] private GameObject creditPanel;
+        [SerializeField] private float creditSeconds = 1.5f;
+
+        void Awake()
         {
-            StartCoroutine(FetchJson());
+            if (Instance != null) { Destroy(gameObject); return; }
+            Instance = this;
+            SceneDirector = GetComponentInChildren<SceneDirector>();
         }
 
-        private IEnumerator FetchJson()
+        async void Start()
         {
-            using (UnityWebRequest request = UnityWebRequest.Get(GoogleSheets.API_URL))
+            // クレジット表示をできるようにしておいた
+            if (showCreditsOnBoot && creditPanel)
             {
-                yield return request.SendWebRequest();
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    Debug.Log("Response:\n" + request.downloadHandler.text);
-                }
-                else
-                {
-                    Debug.LogError("Error: " + request.error);
-                }
+                creditPanel.SetActive(true);
+                await Task.Delay(Mathf.RoundToInt(creditSeconds * 1000));
+                creditPanel.SetActive(false);
             }
+
+            // TitleSceneを読み込み
+            if (SceneDirector)
+                await SceneDirector.SwitchSceneAsync(first, false);
+            else 
+                Debug.LogError("[GameManager] SceneDirector not found!");
         }
     }
 }
