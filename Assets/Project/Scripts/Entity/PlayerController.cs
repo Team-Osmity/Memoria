@@ -12,6 +12,10 @@ namespace Memoria.Entity
         public void Initialize(Player player)
         {
             this.player = player;
+        }
+
+        private void Awake()
+        {
             input = new GameInput();
             input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
             input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
