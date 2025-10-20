@@ -22,7 +22,7 @@ namespace Memoria.Systems
         public string MasterSceneName { get; private set; }
         public string CurrentContentName { get; private set; }
 
-        void Awake()
+        private void Awake()
         {
             if (Instance && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
