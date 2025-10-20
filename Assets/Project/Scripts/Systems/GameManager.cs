@@ -14,14 +14,14 @@ namespace Memoria.Systems
         [SerializeField] private GameObject creditPanel;
         [SerializeField] private float creditSeconds = 1.5f;
 
-        void Awake()
+        private void Awake()
         {
             if (Instance != null) { Destroy(gameObject); return; }
             Instance = this;
             SceneDirector = GetComponentInChildren<SceneDirector>();
         }
 
-        async void Start()
+        private async void Start()
         {
             // クレジット表示をできるようにしておいた
             if (showCreditsOnBoot && creditPanel)
