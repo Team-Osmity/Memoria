@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c2528544c303c48916963a35949491, type: 3}
   m_Name: SceneCatalog
   m_EditorClassIdentifier: 
+  contents:
+  - key: 0
+    sceneName: TitleScene
+  - key: 1
+    sceneName: GameScene
+  overlays: []
