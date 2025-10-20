@@ -9,18 +9,20 @@ namespace Memoria.Systems
     [CreateAssetMenu(menuName = "Memoria/SceneCatalog")]
     public class SceneCatalog : ScriptableObject
     {
-        [SerializeField] public struct ContentEntry
+        [System.Serializable] public struct ContentEntry
         {
             public Scenes.ContentScene key;
             public string sceneName;
         }
-        [SerializeField] public struct OverlayEntry
+        [System.Serializable] public struct OverlayEntry
         {
             public Scenes.OverlayScene key;
             public string sceneName;
         }
 
+        [Header("Contents")]
         public List<ContentEntry> contents = new List<ContentEntry>();
+        [Header("Overlays")]
         public List<OverlayEntry> overlays = new List<OverlayEntry>();
 
         Dictionary<Scenes.ContentScene,string> _cMap;

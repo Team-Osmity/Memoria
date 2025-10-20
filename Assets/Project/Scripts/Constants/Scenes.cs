@@ -5,6 +5,7 @@ namespace Memoria.Constants
         public enum ContentScene
         {
             Title,
+            Game,
             MainMenu,
             Stage01,
             Ending
