@@ -17,4 +17,6 @@ MonoBehaviour:
     sceneName: TitleScene
   - key: 1
     sceneName: GameScene
+  - key: 4
+    sceneName: EndingScene
   overlays: []
