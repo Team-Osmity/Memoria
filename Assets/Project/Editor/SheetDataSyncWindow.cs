@@ -9,11 +9,16 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Memoria.Constants;
+using Memoria.Systems;
 
 public class SheetsDataSyncWindow : EditorWindow
 {
     [MenuItem("Tools/Google Sheets")]
     static void Open() => GetWindow<SheetsDataSyncWindow>("Google Sheets");
+
+    enum ObfMode { None, Simple, AES }
+    ObfMode _mode = ObfMode.Simple;
+    string _aesPassphrase = "";
 
     string _sheetName;
     string _savePathAbs;
@@ -29,7 +34,7 @@ public class SheetsDataSyncWindow : EditorWindow
 
     static string ResolveSavePath(string relative)
     {
-        if (string.IsNullOrEmpty(relative)) relative = "Save/Parameters.json";
+        if (string.IsNullOrEmpty(relative)) relative = "Save/Parameters.sav";
         string dir = Path.Combine(Application.persistentDataPath, Path.GetDirectoryName(relative) ?? "");
         Directory.CreateDirectory(dir);
         return Path.Combine(dir, Path.GetFileName(relative));
@@ -95,11 +100,39 @@ public class SheetsDataSyncWindow : EditorWindow
 
             string pretty = envelope.ToString(Formatting.Indented);
 
+            string toSave;
+            string obfInfo;
+            switch (_mode)
+            {
+                case ObfMode.None:
+                    toSave = pretty;
+                    obfInfo = "None";
+                    break;
+                case ObfMode.Simple:
+                    toSave = JsonObfuscator.Encode(pretty);
+                    obfInfo = "Simple(XOR+Base64)";
+                    break;
+                case ObfMode.AES:
+                    if (string.IsNullOrEmpty(_aesPassphrase))
+                    {
+                        _lastLog = "AES mode selected but passphrase is empty. Aborted.";
+                        Debug.LogError(_lastLog);
+                        return;
+                    }
+                    toSave = JsonObfuscator.AesEncrypt(pretty, _aesPassphrase);
+                    obfInfo = "AES(PBKDF2+CBC)";
+                    break;
+                default:
+                    toSave = pretty;
+                    obfInfo = "Unknown";
+                    break;
+            }
+
             EditorUtility.DisplayProgressBar("Google Sheets", "Saving...", 0.6f);
-            AtomicWriteUtf8NoBom(_savePathAbs, pretty);
+            AtomicWriteUtf8NoBom(_savePathAbs, toSave);
 
             var bytes = Encoding.UTF8.GetByteCount(pretty);
-            _lastLog = $"Saved to: {_savePathAbs}\n({Application.persistentDataPath}/ {_savePathRelDisplay})\nBytes: {bytes}\nUTC: {DateTime.UtcNow:o}";
+            _lastLog = $"Saved to: {_savePathAbs}\n({Application.persistentDataPath}/ {_savePathRelDisplay})\nBytes: {bytes}\nMode: {obfInfo}\nUTC: {DateTime.UtcNow:o}";
             Debug.Log(_lastLog);
         }
         catch (Exception ex)
@@ -134,6 +167,15 @@ public class SheetsDataSyncWindow : EditorWindow
             _sheetName = EditorGUILayout.TextField(_sheetName);
             if (GUILayout.Button("Pull", GUILayout.Width(80)))
                 Pull(_sheetName);
+        }
+
+        GUILayout.Space(6);
+        _mode = (ObfMode)EditorGUILayout.EnumPopup("Obfuscation", _mode);
+        if (_mode == ObfMode.AES)
+        {
+            EditorGUI.indentLevel++;
+            _aesPassphrase = EditorGUILayout.PasswordField("AES Passphrase", _aesPassphrase);
+            EditorGUI.indentLevel--;
         }
 
         GUILayout.Space(6);

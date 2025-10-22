@@ -23,6 +23,10 @@ namespace Memoria.Systems
 
         private async void Start()
         {
+            await ParameterManager.InitializeAsync();
+
+            showCreditsOnBoot = ParameterManager.GetParam<bool>("showCreditsOnBoot", false);
+            creditSeconds = ParameterManager.GetParam<float>("creditSeconds", 1.5f);
             // クレジット表示をできるようにしておいた
             if (showCreditsOnBoot && creditPanel)
             {
