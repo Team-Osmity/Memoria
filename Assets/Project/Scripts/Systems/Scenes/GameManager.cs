@@ -9,10 +9,11 @@ namespace Memoria.Systems
         public static GameManager Instance { get; private set; }
         public SceneDirector SceneDirector { get; private set; }
 
-        [SerializeField] private Scenes.ContentScene first = Scenes.ContentScene.Title;
-        [SerializeField] private bool showCreditsOnBoot = false;
         [SerializeField] private GameObject creditPanel;
-        [SerializeField] private float creditSeconds = 1.5f;
+        private SceneStates.ContentScene first = SceneStates.ContentScene.Title;
+        private bool showCreditsOnBoot;
+        private float creditSeconds;
+        public bool verboseLog;
 
         private void Awake()
         {
@@ -23,6 +24,12 @@ namespace Memoria.Systems
 
         private async void Start()
         {
+            await ParameterManager.InitializeAsync();
+            verboseLog = ParameterManager.GetParam<bool>(GameStates.VERBOSE_LOG, true);
+
+            showCreditsOnBoot = ParameterManager.GetParam<bool>(GameStates.SHOW_CREDITS_ON_BOOT, false);
+            creditSeconds = ParameterManager.GetParam<float>(GameStates.CREDIT_SECONDS, 1.5f);
+
             // クレジット表示をできるようにしておいた
             if (showCreditsOnBoot && creditPanel)
             {

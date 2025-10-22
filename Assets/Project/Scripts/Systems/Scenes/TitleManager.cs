@@ -9,7 +9,7 @@ namespace Memoria.Systems
     {
         async public void onClickStartButton()
         {
-            await GameManager.Instance.SceneDirector.SwitchSceneAsync(Scenes.ContentScene.Game, false);
+            await GameManager.Instance.SceneDirector.SwitchSceneAsync(SceneStates.ContentScene.Game, false);
         }
     }
 }
