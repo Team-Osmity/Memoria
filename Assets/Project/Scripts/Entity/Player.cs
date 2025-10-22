@@ -10,7 +10,6 @@ namespace Memoria.Entity
         private void Awake()
         {
             controller = GetComponent<PlayerController>();
-            controller.Initialize(this);
         }
     }
 }
