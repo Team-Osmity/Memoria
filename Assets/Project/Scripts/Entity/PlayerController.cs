@@ -22,7 +22,7 @@ namespace Memoria.Entity
             input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
             input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
-            playerMoveSpeed = ParameterManager.GetParam<float>(Player.PLAYER_MOVE_SPEED, 5f);
+            playerMoveSpeed = ParameterManager.GetParam<float>(PlayerConstants.PLAYER_MOVE_SPEED, 5f);
         }
 
         private void OnEnable() => input.Player.Enable();
