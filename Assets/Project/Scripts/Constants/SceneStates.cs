@@ -1,6 +1,6 @@
 namespace Memoria.Constants
 {
-    public static class Scenes
+    public static class SceneStates
     {
         public enum ContentScene
         {
@@ -17,5 +17,7 @@ namespace Memoria.Constants
             PauseMenu,
             Settings
         }
+
+        public const string LOADING_FADE_DURATION = "loadingFadeDuration";
     }
 }

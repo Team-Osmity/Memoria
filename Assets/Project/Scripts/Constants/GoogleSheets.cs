@@ -9,8 +9,5 @@ namespace Memoria.Constants
 
         public const string START_MESSAGE = "Fetching data from Google Sheets...";
         public const string SUCCESS_MESSAGE = "Data successfully received from Google Sheets.";
-
-        public const string SHOW_CREDITS_ON_BOOT = "showCreditsOnBoot";
-        public const string CREDIT_SECONDS = "creditSeconds";
     }
 }

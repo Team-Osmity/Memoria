@@ -25,6 +25,8 @@ namespace Memoria.Systems
         private static JObject userData;
         private static JObject mergedData;
         private static bool initialized;
+        private static TaskCompletionSource<bool> initTcs = new TaskCompletionSource<bool>();
+        public static bool IsInitialized => initialized;
 
         /// <summary>
         /// 初期化
@@ -41,7 +43,14 @@ namespace Memoria.Systems
             });
 
             initialized = true;
+            initTcs.TrySetResult(true);
             Debug.Log($"[ParameterManager] Initialized ({DefaultFilePath})");
+        }
+
+        public static async Task WaitUntilInitializedAsync()
+        {
+            if (initialized) return;
+            await initTcs.Task;
         }
 
         private static JObject LoadAndDecode(string path, ObfMode mode, string pass)

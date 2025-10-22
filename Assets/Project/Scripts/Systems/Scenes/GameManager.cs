@@ -10,9 +10,10 @@ namespace Memoria.Systems
         public SceneDirector SceneDirector { get; private set; }
 
         [SerializeField] private GameObject creditPanel;
-        private Scenes.ContentScene first = Scenes.ContentScene.Title;
+        private SceneStates.ContentScene first = SceneStates.ContentScene.Title;
         private bool showCreditsOnBoot;
         private float creditSeconds;
+        public bool verboseLog;
 
         private void Awake()
         {
@@ -24,9 +25,10 @@ namespace Memoria.Systems
         private async void Start()
         {
             await ParameterManager.InitializeAsync();
+            verboseLog = ParameterManager.GetParam<bool>(GameStates.VERBOSE_LOG, true);
 
-            showCreditsOnBoot = ParameterManager.GetParam<bool>(GoogleSheets.SHOW_CREDITS_ON_BOOT, false);
-            creditSeconds = ParameterManager.GetParam<float>(GoogleSheets.CREDIT_SECONDS, 1.5f);
+            showCreditsOnBoot = ParameterManager.GetParam<bool>(GameStates.SHOW_CREDITS_ON_BOOT, false);
+            creditSeconds = ParameterManager.GetParam<float>(GameStates.CREDIT_SECONDS, 1.5f);
 
             // クレジット表示をできるようにしておいた
             if (showCreditsOnBoot && creditPanel)

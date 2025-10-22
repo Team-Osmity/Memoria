@@ -12,7 +12,7 @@ namespace Memoria.Systems
             {
                 Debug.Log("Goal Reached!");
                 isGaoled = true;
-                await GameManager.Instance.SceneDirector.SwitchSceneAsync(Memoria.Constants.Scenes.ContentScene.Ending, false);
+                await GameManager.Instance.SceneDirector.SwitchSceneAsync(Memoria.Constants.SceneStates.ContentScene.Ending, false);
             }
         }
     }

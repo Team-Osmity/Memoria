@@ -11,9 +11,7 @@ namespace Memoria.Systems
         public static SceneDirector Instance { get; private set; }
         [SerializeField] private SceneCatalog catalog;
         [SerializeField] private CanvasGroup loadingOverlay;
-        private float loadingFadeDuration = 0.25f;
-
-        [SerializeField] private bool verboseLog = true;
+        private float loadingFadeDuration;
 
         public bool isBusy { get; private set; }
 
@@ -38,8 +36,11 @@ namespace Memoria.Systems
         /// <summary>
         /// シーンを切替える
         /// </summary>
-        public async Task SwitchSceneAsync(Scenes.ContentScene nextScene, bool force = true)
+        public async Task SwitchSceneAsync(SceneStates.ContentScene nextScene, bool force = true)
         {
+            await ParameterManager.WaitUntilInitializedAsync();
+            loadingFadeDuration = ParameterManager.GetParam<float>(SceneStates.LOADING_FADE_DURATION, 0.25f);
+
             if (isBusy && !force) return;
             isBusy = true;
 
@@ -53,7 +54,7 @@ namespace Memoria.Systems
                 }
                 if (!force && nextName == CurrentContentName)
                 {
-                    if (verboseLog)
+                    if (GameManager.Instance.verboseLog)
                         Debug.Log($"[SceneDirector] Already in content scene: {nextName}");
                     return;
                 }
@@ -75,7 +76,7 @@ namespace Memoria.Systems
                 var sc = SceneManager.GetSceneByName(nextName);
                 SceneManager.SetActiveScene(sc);
                 CurrentContentName = nextName;
-                if (verboseLog)
+                if (GameManager.Instance.verboseLog)
                     Debug.Log($"[SceneDirector] Switched to content scene: {nextName}");
             }
             finally
@@ -115,7 +116,7 @@ namespace Memoria.Systems
             var u = SceneManager.UnloadSceneAsync(top);
             while (!u.isDone)
                 await Task.Yield();
-            if (verboseLog)
+            if (GameManager.Instance.verboseLog)
                 Debug.Log($"[SceneDirector] Unloaded overlay scene: {top}");
         }
 

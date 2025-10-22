@@ -11,12 +11,12 @@ namespace Memoria.Systems
     {
         [System.Serializable] public struct ContentEntry
         {
-            public Scenes.ContentScene key;
+            public SceneStates.ContentScene key;
             public string sceneName;
         }
         [System.Serializable] public struct OverlayEntry
         {
-            public Scenes.OverlayScene key;
+            public SceneStates.OverlayScene key;
             public string sceneName;
         }
 
@@ -25,16 +25,16 @@ namespace Memoria.Systems
         [Header("Overlays")]
         public List<OverlayEntry> overlays = new List<OverlayEntry>();
 
-        Dictionary<Scenes.ContentScene,string> _cMap;
-        Dictionary<Scenes.OverlayScene,string> _oMap;
+        Dictionary<SceneStates.ContentScene,string> _cMap;
+        Dictionary<SceneStates.OverlayScene,string> _oMap;
 
-        public string Resolve(Scenes.ContentScene k)
+        public string Resolve(SceneStates.ContentScene k)
         {
             _cMap ??= contents.Where(e=>!string.IsNullOrEmpty(e.sceneName))
                               .ToDictionary(e=>e.key, e=>e.sceneName);
             return _cMap.TryGetValue(k, out var v) ? v : null;
         }
-        public string Resolve(Scenes.OverlayScene k)
+        public string Resolve(SceneStates.OverlayScene k)
         {
             _oMap ??= overlays.Where(e=>!string.IsNullOrEmpty(e.sceneName))
                               .ToDictionary(e=>e.key, e=>e.sceneName);
