@@ -1,0 +1,23 @@
+# ==========================================
+# Godot 4+ Official Minimum Ignores
+# ==========================================
+.godot/
+/android/
+
+# ==========================================
+# For Multi-Platform & Desktop IDEs (Recommended)
+# ==========================================
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# For Future C# Integration (.NET)
+# ==========================================
+.mono/
+bld/
+bin/
+obj/
+*.uid
