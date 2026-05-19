@@ -1,23 +1,38 @@
 # ==========================================
-# Godot 4+ Official Minimum Ignores
+# Godot 4+ Official Template Ignores
 # ==========================================
 .godot/
+.nomedia
 /android/
 
+# Godot-specific ignores
+.import/
+export.cfg
+export_credentials.cfg
+*.tmp
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
 # ==========================================
-# For Multi-Platform & Desktop IDEs (Recommended)
+# Mono / C# Specific Ignores
 # ==========================================
+.mono/
+data_*/
+mono_crash.*.json
+# C#のコンパイル成果物（今後C#を導入した時のために必須）
+bin/
+obj/
+bld/
+*.uid
+
+# ==========================================
+# Desktop IDEs & OS Specific Ignores (Recommended)
+# ==========================================
+# 外部エディタ設定（VS Code / JetBrains Riderなど）
 .vscode/
 .idea/
 
+# OSが勝手に作るキャッシュファイル
 .DS_Store
 Thumbs.db
-
-# ==========================================
-# For Future C# Integration (.NET)
-# ==========================================
-.mono/
-bld/
-bin/
-obj/
-*.uid
