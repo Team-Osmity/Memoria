@@ -44,8 +44,8 @@ public partial class PlayerNode : CharacterBody3D
         Velocity = _jumpController.Tick(IsOnFloor(), jump, Velocity, delta); // 入力から実際のY方向の移動速度ベクトルを計算する。
 
         MoveAndSlide(); // Velocity プロパティを使って、実際に移動してくれる CharacterBody3D の便利メソッドを実行
-        RotateModel(Velocity, delta);
-        UpdateAnimation(moveInput, sprint, crouching); // 入力を Animation の見た目に反映する
+        RotateModel(Velocity, delta); // モデルの向きを移動に合わせて回転させる自作メソッドを実行
+        UpdateAnimation(moveInput, sprint, crouching); // 入力を Animation の見た目に反映する自作メソッドを実行
     }
 
     // CameraRig 用の自作のセッター
@@ -104,29 +104,30 @@ public partial class PlayerNode : CharacterBody3D
     }
 
     private void RotateModel(
-        Vector3 velocity,
-        double delta)
+        Vector3 velocity, // 最終的に求まった移動速度ベクトル
+        double delta) // 前の tick からの差の時間 (現実の時間)
     {
-        Vector3 horizontalVelocity = velocity;
+        Vector3 horizontalVelocity = velocity; // 水平方向のベクトルを取得したいので、まずは移動速度ベクトルを使って初期化する。
+        horizontalVelocity.Y = 0; // Y方向を0にすることで、水平方向のベクトルにする。
 
-        horizontalVelocity.Y = 0;
-
-        if (horizontalVelocity.Length() < 0.1f)
+        if (horizontalVelocity.Length() < 0.1f) // もし、水平方向の移動が無ければ、
         {
-            return;
+            return; // 何もせず処理を終了する
         }
 
+        // 方向をラジアンで返す Mathf.Atan2 メソッドを使って、プレイヤーの方向を移動速度ベクトルから求める。
         float targetRotation = Mathf.Atan2(
             horizontalVelocity.X,
             horizontalVelocity.Z);
 
-        Vector3 rotation = _model.Rotation;
+        Vector3 rotation = _model.Rotation; // 現在のモデルの回転を取得する
 
+        // Lerp (線形？) にアングルを計算して、なめらかな回転を実現している (らしい)
         rotation.Y = Mathf.LerpAngle(
             rotation.Y,
             targetRotation,
             12f * (float)delta);
 
-        _model.Rotation = rotation;
+        _model.Rotation = rotation; // 計算した結果の回転をモデルに適用する
     }
 }
