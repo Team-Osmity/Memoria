@@ -1,30 +1,17 @@
 [gd_scene format=3 uid="uid://b6gph4rkuckrf"]
 
-[ext_resource type="Script" uid="uid://duietgx3spf61" path="res://src/features/player/scripts/PlayerNode.cs" id="1_oubcf"]
+[ext_resource type="Script" uid="uid://o4y5sjc3s0s" path="res://src/features/player/scripts/PlayerManager.cs" id="1_oubcf"]
 [ext_resource type="PackedScene" uid="uid://b5vxly0ucbdxh" path="res://models/pre_player.glb" id="2_0ph83"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3v8pm"]
 radius = 0.4
 height = 1.8
 
-[sub_resource type="Animation" id="Animation_0ph83"]
-resource_name = "float"
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_3v8pm"]
-_data = {
-&"float": SubResource("Animation_0ph83")
-}
-
 [node name="Player" type="CharacterBody3D" unique_id=411786072]
 script = ExtResource("1_oubcf")
-
-[node name="Pivot" type="Node3D" parent="." unique_id=1880002606]
-
-[node name="UAL1_Standard" parent="Pivot" unique_id=1823288123 instance=ExtResource("2_0ph83")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=584163088]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_3v8pm")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1607621682]
-libraries/ = SubResource("AnimationLibrary_3v8pm")
+[node name="pre_model" parent="." unique_id=1823288123 instance=ExtResource("2_0ph83")]
