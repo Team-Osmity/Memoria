@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://dk6f3j8m03t0x"]
+
+[ext_resource type="Script" uid="uid://bokgr5cc25jup" path="res://src/features/scripts/MainScene.cs" id="1_ssagx"]
+[ext_resource type="PackedScene" uid="uid://b6gph4rkuckrf" path="res://src/features/scenes/player/player.tscn" id="2_4rxqs"]
+[ext_resource type="Script" uid="uid://cuptdmtiicued" path="res://src/features/scripts/camera/CameraRig.cs" id="3_iiomn"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tpc17"]
+size = Vector3(60, 2, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ybl8b"]
+size = Vector3(60, 2, 60)
+
+[node name="Main" type="Node" unique_id=367684276]
+script = ExtResource("1_ssagx")
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=596918715]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1634514958]
+shape = SubResource("BoxShape3D_tpc17")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1802053239]
+mesh = SubResource("BoxMesh_ybl8b")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1315916935]
+transform = Transform3D(1, 0, 0, 0, -0.66915655, 0.7431215, 0, -0.7431215, -0.66915655, 0, 19.186855, 0)
+shadow_enabled = true
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=455662133]
+script = ExtResource("3_iiomn")
+
+[node name="YawPivot" type="Node3D" parent="CameraRig" unique_id=953279933]
+
+[node name="PitchPivot" type="Node3D" parent="CameraRig/YawPivot" unique_id=1714266477]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/YawPivot/PitchPivot" unique_id=1490029218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6664815, 4.844599)
+
+[node name="PlayerNode" parent="." unique_id=411786072 instance=ExtResource("2_4rxqs")]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1409396871]
+
+[node name="PauseMenu" type="Control" parent="UI" unique_id=411044866]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/PauseMenu" unique_id=583076866]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/PauseMenu/PanelContainer" unique_id=1898804664]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="UI/PauseMenu/PanelContainer/VBoxContainer" unique_id=468566741]
+layout_mode = 2
+text = "Exit Game"

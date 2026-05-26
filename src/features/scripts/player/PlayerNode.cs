@@ -2,8 +2,11 @@ using Godot;
 
 // プレイヤーに関する script 全体を管理するクラス。
 // CharacterBody3D を継承しており、Godot との接点となっている。
-public partial class PlayerManager : CharacterBody3D
+public partial class PlayerNode : CharacterBody3D
 {
+    private CameraRig _cameraRig; // Camera が向いてる方向に移動したいので、カメラを取得するための変数を用意しておく。
+    private Node3D _model; // model の向きを更新する必要があるので、モデルを取得するための変数を用意しておく。
+
     private readonly PlayerMoveController _moveController = new(); // PlayerMoveController クラスのインスタンスを作成する。
     private readonly PlayerJumpController _jumpController = new(); // PlayerJumpController クラスのインスタンスを作成する。
 
@@ -13,11 +16,13 @@ public partial class PlayerManager : CharacterBody3D
 
     // 現在は仮の model を使っているので、後から置き換えやすいように、AnimationPlayer の Path を定数として定義しておく。
     private const string AnimationPlayerPath = "pre_model/AnimationPlayer";
+    private const string ModelPath = "pre_model";
 
     // Node が初期化されたときに発火するメソッド
     public override void _Ready() //
     {
         AnimationPlayer _animationPlayer = GetNode<AnimationPlayer>(AnimationPlayerPath); // Godot Editor で設定してある model から AnimationPlayer Node を取得する。
+        _model = GetNode<Node3D>(ModelPath); // Pre_model を取得する。
         _animationController = new PlayerAnimationController(_animationPlayer); // PlayerAnimationController クラスのインスタンスを作成する。
     }
 
@@ -28,18 +33,25 @@ public partial class PlayerManager : CharacterBody3D
         Vector2 moveInput = Input.GetVector(
             "move_left", // 左方入力
             "move_right", // 右方入力
-            "move_forward", // 前方入力
-            "move_backward"); // 後方入力
+            "move_backward", // 後方入力
+            "move_forward"); // 前方入力
 
         bool sprint = Input.IsActionPressed("sprint"); // sprint (走る) のキー入力を取得する
         bool jump = Input.IsActionPressed("jump"); // jump (ジャンプ) のキー入力を取得する
         bool crouching = Input.IsActionPressed("crouch"); // crouch (しゃがむ) のキー入力をちゅ得する
 
-        Velocity = _moveController.Tick(moveInput, sprint, crouching, Velocity); // 入力から実際のXZ方向の移動速度ベクトルを計算する。
+        Velocity = _moveController.Tick(moveInput, _cameraRig.CameraBasis, sprint, crouching, Velocity); // 入力から実際のXZ方向の移動速度ベクトルを計算する。
         Velocity = _jumpController.Tick(IsOnFloor(), jump, Velocity, delta); // 入力から実際のY方向の移動速度ベクトルを計算する。
 
         MoveAndSlide(); // Velocity プロパティを使って、実際に移動してくれる CharacterBody3D の便利メソッドを実行
+        RotateModel(Velocity, delta);
         UpdateAnimation(moveInput, sprint, crouching); // 入力を Animation の見た目に反映する
+    }
+
+    // CameraRig 用の自作のセッター
+    public void SetCameraRig(CameraRig cameraRig)
+    {
+        _cameraRig = cameraRig;
     }
 
     // PlayerAnimationController を使って、Animation を再生する自作のメソッド
@@ -89,5 +101,32 @@ public partial class PlayerManager : CharacterBody3D
         // 以降「もし 動いていないなら、」
 
         _animationController.PlayIdle(); // 待機アニメーションを再生する。
+    }
+
+    private void RotateModel(
+        Vector3 velocity,
+        double delta)
+    {
+        Vector3 horizontalVelocity = velocity;
+
+        horizontalVelocity.Y = 0;
+
+        if (horizontalVelocity.Length() < 0.1f)
+        {
+            return;
+        }
+
+        float targetRotation = Mathf.Atan2(
+            horizontalVelocity.X,
+            horizontalVelocity.Z);
+
+        Vector3 rotation = _model.Rotation;
+
+        rotation.Y = Mathf.LerpAngle(
+            rotation.Y,
+            targetRotation,
+            12f * (float)delta);
+
+        _model.Rotation = rotation;
     }
 }

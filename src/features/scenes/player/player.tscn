@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://b6gph4rkuckrf"]
 
-[ext_resource type="Script" uid="uid://o4y5sjc3s0s" path="res://src/features/player/scripts/PlayerManager.cs" id="1_oubcf"]
+[ext_resource type="Script" uid="uid://o4y5sjc3s0s" path="res://src/features/scripts/player/PlayerNode.cs" id="1_oubcf"]
 [ext_resource type="PackedScene" uid="uid://b5vxly0ucbdxh" path="res://models/pre_player.glb" id="2_0ph83"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3v8pm"]
 radius = 0.4
 height = 1.8
 
-[node name="Player" type="CharacterBody3D" unique_id=411786072]
+[node name="PlayerNode" type="CharacterBody3D" unique_id=411786072]
 script = ExtResource("1_oubcf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=584163088]
